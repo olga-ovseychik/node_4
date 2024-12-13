@@ -1,22 +1,29 @@
-const Turtle = require('./turtle');
-const Weapon = require('./weapon');
-const Pizza = require('./pizza');
+require('dotenv').config();
+const TurtleModel = require('./turtle');
+const WeaponModel = require('./weapon');
+const PizzaModel = require('./pizza');
 
 module.exports = (Sequelize, config) => {
-    // TODO: create an object to connect to the database - sequelize
+	const { database, username, password, host, port } = config;
 
-    const turtles = Turtle(Sequelize, sequelize);
-    const weapons = Weapon(Sequelize, sequelize);
-    const pizzas = Pizza(Sequelize , sequelize);
+	const sequelize = new Sequelize(database, username, password, 
+		{
+			host,
+			port,
+			dialect: 'postgres', 
+		} 
+	);
 
-    // TODO: create relationships between tables
+	const Turtle = TurtleModel(Sequelize, sequelize);
+	const Weapon = WeaponModel(Sequelize, sequelize);
+	const Pizza = PizzaModel(Sequelize, sequelize);
 
-    return {
-        turtles,
-        weapons,
-        pizzas,
+	return {
+		Turtle,
+		Weapon,
+		Pizza,
 
-        sequelize: sequelize,
-        Sequelize: Sequelize,
-    };
+		sequelize: sequelize,
+		Sequelize: Sequelize,
+	};
 };
