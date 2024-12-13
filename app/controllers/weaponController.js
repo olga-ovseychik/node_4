@@ -13,7 +13,15 @@ const createItem = ('/api/weapons', async (req, res) => {
 
 const getAll = ('/', async (req, res) => {
     try {
+        /* --------------------------- Find all weapons -------------------------- */
         const { count, rows }  = await Weapon.findAndCountAll({});
+
+
+        /* ------------- Find all weapons where dps greater than 100 ------------- */
+        // const  { count, rows } = await Weapon.findAndCountAll({
+        //     where: { dps: { [Sequelize.Op.gt]: 100 } },
+        //     order: [['dps', 'ASC']],
+        // });
 
         if (!count) {
             return res.status(200).json({ message: 'No weapons found.'});

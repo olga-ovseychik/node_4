@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
+const { Op } = require("sequelize");
 const config = require('../config/config');
-const { Pizza } = require('../models/index')(Sequelize, config);
+const { Pizza, Turtle } = require('../models/index')(Sequelize, config);
 
 const createItem = ('/', async (req, res) => {
     try {
@@ -13,7 +14,47 @@ const createItem = ('/', async (req, res) => {
 
 const getAll = ('/', async (req, res) => {
     try {
+        /* ---------------------------- Get all pizzas --------------------------- */
         const { count, rows }  = await Pizza.findAndCountAll({});
+
+
+        /* ------------------ Get all pizzas without duplicates ------------------ */
+        /*
+        const { count, rows } = await Pizza.findAndCountAll({
+            attributes: [[Sequelize.literal('DISTINCT ON ("Pizza"."name") "Pizza"."name"'), 'name']], 
+            include: [
+              {
+                model: Turtle,
+                as: 'firstFavoriteOfTurtles', 
+                required: false, 
+                attributes: [], 
+              },
+              {
+                model: Turtle,
+                as: 'secondFavoriteOfTurtles', 
+                required: false, 
+                attributes: [], 
+              },
+            ],
+            where: {
+              [Op.or]: [
+                { '$firstFavoriteOfTurtles.firstFavoritePizzaId$': { [Op.ne]: null } },
+                { '$secondFavoriteOfTurtles.secondFavoritePizzaId$': { [Op.ne]: null } }, 
+              ],
+            },
+            raw: true,
+          });
+          */
+
+
+        /* ------ Update all pizzas with a calorie count greater than 3000 ------ */
+        /*
+        await Pizza.update({ description: Sequelize.literal(`CONCAT(description, ' SUPER FAT!')`) }, { 
+            where: { calories: { [Op.gt]: 3000 } } 
+        });
+
+        const { count, rows }  = await Pizza.findAndCountAll({ where: {calories: { [Op.gt]: 3000 }} });
+        */
 
         if (!count) {
             return res.status(200).json({ message: 'No pizzas found.'});
