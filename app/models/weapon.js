@@ -1,5 +1,19 @@
 module.exports = (Sequelize, sequelize) => {
-    return sequelize.define('weapons', {
-        // TODO: field description
+	const { DataTypes } = Sequelize;
+
+    return sequelize.define('Weapon', {
+		id: {
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
+			primaryKey: true,
+		  },
+		  name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		  },
+		  dps: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		  }
     });
 };
